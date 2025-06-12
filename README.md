@@ -1,2 +1,114 @@
 # how-to-make-digirunner-opensource-launch-standalone
 How to make digirunner opensource launch on the host system without container
+
+
+## Step 1: Download latest release build from digiRunner Opensource Repository
+
+download `digiRunner-Open-Source-<release tag>-h2-build.zip` file from [release](https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source/releases)
+
+
+_At the time of writing this article, only version test-release-action-11 was available for download. The examples below use this version._
+
+```
+wget https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source/releases/download/test-release-action-11/digiRunner-Open-Source-test-release-action-11-h2-build.zip
+```
+
+## Step 2: Unzip digiRunner compress file
+
+unzip digiRunner compress file, the file structure should be like:
+
+```
+digiRunner-Open-Source-test-release-action-11-h2-build/
+├─ lib/
+├─ keys/
+├─ libsext/
+├─ digirunner.jar
+```
+
+## Step 3: Download Task-Compose Portable Executable
+
+- download the latest portable version of **task-compose** from the [releases page](https://github.com/vulcanshen-tpi/task-compose/releases). 
+
+- Be sure to pick the one that matches your operating system. The filenames for these versions will start with `task-compose-portable-`.
+
+_At the time of writing this article, only version v1.0.1 was available for download. The examples below use this version._
+
+```
+wget https://github.com/vulcanshen-tpi/task-compose/releases/download/v1.0.1/task-compose-portable_1.0.1_darwin_arm64.tar.gz
+```
+
+## Step 4: Unzip Task-Compose compress file
+
+unzip task-compose compress file, the file structure should be like:
+
+```
+task-compose-portable_1.0.1_darwin_arm64/
+├─ task-compose-portable
+├─ README.md
+├─ LICENSE
+```
+
+## Step 5: Copy Executable
+
+copy `task-compose-portable(.exe)` file to digiRunner unzip directory, the file structure will be like:
+
+```
+...-h2-build/
+├─ lib/
+├─ keys/
+├─ libsext/
+├─ digirunner.jar
+├─ task-compose-portable(.exe) <-- paste to here
+```
+
+## Step 6: Write Your Own `task-compose.yaml` file
+
+create `task-compose.yaml` in digiRunner unzip directory
+
+content of `task-compose.yaml`
+```yaml
+tasks:
+  - name: digirunner-opensource
+    executable: java
+    base_dir: .
+    args:
+      - -jar
+      - digirunner.jar
+```
+
+so currently the file structure should be:
+
+```
+...-h2-build/
+├─ lib/
+├─ keys/
+├─ libsext/
+├─ digirunner.jar
+├─ task-compose-portable(.exe)
+├─ task-compose.yaml
+```
+
+then double click(execute) the `task-compose-portable(.exe)`
+
+the digiRunner Opensource startup process should begin
+
+---
+
+# Example Configuration
+
+This is a configuration for a custom service that sets the port number, specifies the H2 file-based database, and automatically initializes the database.
+
+```yaml
+tasks:
+  - name: digirunner-opensource
+    executable: java
+    base_dir: .
+    args:
+      - -jar
+      - digirunner.jar
+      - --server.port=31080 # Change to your preferred port.
+      - --spring.datasource.url=jdbc:h2:./dgrdb;NON_KEYWORDS=VALUE;Mode=MySQL # Set your preferred JDBC URL.
+      - --spring.sql.init.mode=always # Set to "always" for initial database setup; "never" otherwise.
+```
+
+For more settings, please refer to the [digiRunner OpenSource Repository](https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source)
