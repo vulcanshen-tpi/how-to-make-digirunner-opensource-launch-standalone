@@ -163,4 +163,4 @@ tasks:
       - --spring.sql.init.mode=always # Set to "always" for initial database setup; "never" otherwise.
 ```
 
-For more settings, please refer to the [digiRunner OpenSource Repository](https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source)
+For more settings, please refer to the [digiRunner-Open-Source](https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source) Repository
