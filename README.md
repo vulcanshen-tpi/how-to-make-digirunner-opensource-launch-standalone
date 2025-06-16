@@ -163,4 +163,42 @@ tasks:
       - --spring.sql.init.mode=always # Set to "always" for initial database setup; "never" otherwise.
 ```
 
+### Example 3
+
+Because Example 2 requires you to manually change the spring.sql.init.mode parameter to `never` upon restart, this example automates the detection of the database file and adjusts the parameter accordingly.
+
+```yaml
+tasks:
+  - name: db-detect
+    executable: bash
+    base_dir: .
+    args:
+      - -c
+      - |
+        rm -f digirunner.args
+        cat << EOF > digirunner.args
+        -Xms2g
+        -Xmx4g
+        -Dserver.port=31080
+        -Dspring.datasource.url=jdbc:h2:./db/dgrdb;NON_KEYWORDS=VALUE;Mode=MySQL
+        EOF
+        ls ./db/*.db &> /dev/null && echo '-Dspring.sql.init.mode=never' >> digirunner.args || echo '-Dspring.sql.init.mode=always' >> digirunner.args;
+    healthcheck:
+      command:
+        scripts:
+          - ls
+          - digirunner.args
+  - name: digirunner-opensource
+    executable: java
+    base_dir: .
+    depends_on:
+      - db-detect
+    args:
+      - -cp
+      - digirunner.jar
+      - "@digirunner.args"
+      - org.springframework.boot.loader.launch.PropertiesLauncher
+```
+
+
 For more settings, please refer to the [digiRunner-Open-Source](https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source) Repository
