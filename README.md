@@ -182,6 +182,8 @@ tasks:
         EOF
         ls ./db/*.db &> /dev/null && echo '-Dspring.sql.init.mode=never' >> digirunner.args || echo '-Dspring.sql.init.mode=always' >> digirunner.args;
     healthcheck:
+      frequency:
+        delay: 1s
       command:
         scripts:
           - ls
