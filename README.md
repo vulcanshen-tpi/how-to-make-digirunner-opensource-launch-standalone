@@ -177,8 +177,6 @@ tasks:
       - |
         rm -f digirunner.args
         cat << EOF > digirunner.args
-        -Xms2g
-        -Xmx4g
         -Dserver.port=31080
         -Dspring.datasource.url=jdbc:h2:./db/dgrdb;NON_KEYWORDS=VALUE;Mode=MySQL
         EOF
