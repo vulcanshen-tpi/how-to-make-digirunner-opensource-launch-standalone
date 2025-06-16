@@ -12,10 +12,10 @@ How to make [digirunner opensource](https://github.com/TPIsoftwareOSPO/digiRunne
 download `digiRunner-Open-Source-<release tag>-h2-build.zip` file from [release](https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source/releases)
 
 
-_At the time of writing this article, only version test-release-action-11 was available for download. The examples below use this version._
+_At the time of writing this article, only version test-release-action-12 was available for download. The examples below use this version._
 
 ```
-wget https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source/releases/download/test-release-action-11/digiRunner-Open-Source-test-release-action-11-h2-build.zip
+wget https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source/releases/download/test-release-action-12/h2-pack.zip
 ```
 
 ## Step 2: Unzip digiRunner compress file
@@ -23,7 +23,7 @@ wget https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source/releases/download
 unzip digiRunner compress file, the file structure should be like:
 
 ```
-digiRunner-Open-Source-test-release-action-11-h2-build/
+h2-pack/
 ├─ lib/
 ├─ keys/
 ├─ libsext/
@@ -58,7 +58,7 @@ task-compose-portable_1.0.1_darwin_arm64/
 copy `task-compose-portable(.exe)` file to digiRunner unzip directory, the file structure will be like:
 
 ```
-...-h2-build/
+h2-pack/
 ├─ lib/
 ├─ keys/
 ├─ libsext/
@@ -84,7 +84,7 @@ tasks:
 so currently the file structure should be:
 
 ```
-...-h2-build/
+h2-pack/
 ├─ lib/
 ├─ keys/
 ├─ libsext/
@@ -122,7 +122,7 @@ zulu21.42.19-ca-jre21.0.7-macosx_aarch64/
 **Step 3** Move jre directory to h2-build/ directory
 
 ```
-...-h2-build/
+h2-pack/
 ├─ lib/
 ├─ keys/
 ├─ libsext/
