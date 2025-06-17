@@ -167,6 +167,9 @@ tasks:
 
 Because Example 2 requires you to manually change the spring.sql.init.mode parameter to `never` upon restart, this example automates the detection of the database file and adjusts the parameter accordingly.
 
+
+**for mac or linux with bash installed**
+
 ```yaml
 tasks:
   - name: db-detect
@@ -200,5 +203,48 @@ tasks:
       - org.springframework.boot.loader.launch.PropertiesLauncher
 ```
 
+**for windows powershell**
+
+```yaml
+tasks:
+  - name: db-detect
+    executable: powershell.exe
+    base_dir: .
+    args:
+      - -Command
+      - |
+        Remove-Item -Path digirunner.args -ErrorAction SilentlyContinue;
+
+        $content = @"
+        -Dserver.port=31080
+        -Dspring.datasource.url=jdbc:h2:.\db\dgrdb;NON_KEYWORDS=VALUE;Mode=MySQL
+        "@
+        $content | Out-File -FilePath digirunner.args -Encoding ascii; 
+
+        if (Test-Path -Path ".\db\*.db") {
+            Add-Content -Path digirunner.args -Value '-Dspring.sql.init.mode=never';
+        } else {
+            Add-Content -Path digirunner.args -Value '-Dspring.sql.init.mode=always';
+        }
+    healthcheck:
+      frequency:
+        delay: 1s
+      command:
+        scripts:
+          - powershell.exe 
+          - -Command 
+          - "if ((Test-Path -Path 'digirunner.args') -and ((Get-Item 'digirunner.args').Length -gt 0)) { exit 0 } else { exit 1 }"
+
+  - name: digirunner-opensource
+    executable: java
+    base_dir: .
+    depends_on:
+      - db-detect
+    args:
+      - -cp
+      - digirunner.jar
+      - "@digirunner.args"
+      - org.springframework.boot.loader.launch.PropertiesLauncher
+```
 
 For more settings, please refer to the [digiRunner-Open-Source](https://github.com/TPIsoftwareOSPO/digiRunner-Open-Source) Repository
