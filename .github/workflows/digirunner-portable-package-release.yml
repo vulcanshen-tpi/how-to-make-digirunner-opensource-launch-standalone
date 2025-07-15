@@ -53,7 +53,7 @@ jobs:
         # mac components
         echo "TASK_COMPOSE_MAC_ASSET_NAME=task-compose-portable_${CLEANED_TASK_COMPOSE_VERSION}_darwin_arm64.tar.gz" >> $GITHUB_ENV
 
-    - name: Download windows task-compose-portable.zip
+    - name: Download windows task-compose-portable
       uses: robinraju/release-downloader@v1
       with:
         repository: vulcanshen-tpi/task-compose
@@ -61,7 +61,7 @@ jobs:
         fileName: '${{ env.TASK_COMPOSE_WIN_ASSET_NAME }}'
         out-file-path: ./downloads/win/task-compose
 
-    - name: Download mac task-compose-portable.zip
+    - name: Download mac task-compose-portable
       uses: robinraju/release-downloader@v1
       with:
         repository: vulcanshen-tpi/task-compose
@@ -98,7 +98,7 @@ jobs:
     - name: Extract mac task-compose ${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
       run: |
         mkdir -p ${{ env.TEMP_DIR }}/mac/task-compose/
-        unzip ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content && rm ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
+        tar -xzf ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }} -C ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content && rm ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
 
     - name: Extract Java JRE zip
       run: |
