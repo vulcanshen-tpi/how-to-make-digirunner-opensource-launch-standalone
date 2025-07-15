@@ -86,7 +86,7 @@ jobs:
     - name: Download Java 21 JRE from Azul Zulu
       run: |
         echo "Downloading Java JRE from: ${{ env.ZULU_JRE_DOWNLOAD_URL }}"
-        curl -L -o ./downloads/java_jre.zip "${{ env.ZULU_JRE_DOWNLOAD_URL }}""
+        curl -L -o ./downloads/java_jre.zip "${{ env.ZULU_JRE_DOWNLOAD_URL }}"
         if [ $? -ne 0 ]; then
           echo "Error: Java JRE download failed from $JAVA_URL"
           exit 1
