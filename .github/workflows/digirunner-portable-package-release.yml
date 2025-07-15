@@ -112,7 +112,9 @@ jobs:
         unzip -q ./downloads/mac/java_jre.zip -d ${{ env.TEMP_DIR }}/mac && rm ./downloads/mac/java_jre.zip
         mv ${{ env.TEMP_DIR }}/win/zulu21.42.19-ca-jre21.0.7-win_x64 ${{ env.TEMP_DIR }}/win/jre
         mv ${{ env.TEMP_DIR }}/mac/zulu21.42.19-ca-jre21.0.7-macosx_aarch64 ${{ env.TEMP_DIR }}/mac/jre
+        echo "ls -l ${{ env.TEMP_DIR }}/win/jre"
         ls -l ${{ env.TEMP_DIR }}/win/jre 
+        echo "ls -l ${{ env.TEMP_DIR }}/mac/jre"
         ls -l ${{ env.TEMP_DIR }}/mac/jre
 
 
@@ -122,13 +124,15 @@ jobs:
         mv ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content/task-compose-portable.exe windows_amd64/
         mv ${{ env.TEMP_DIR }}/win/jre windows_amd64/
         cp -R ${{ env.TEMP_DIR }}/h2-pack windows_amd64/
+        echo "ls -l windows_amd64"
         ls -l windows_amd64
         zip -q -r windows_amd64.zip windows_amd64/
 
         mkdir -p mac_arm64
         mv ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content/task-compose-portable mac_arm64/
-        mv ${{ env.TEMP_DIR }}/mac/jre windows_amd64/
+        mv ${{ env.TEMP_DIR }}/mac/jre mac_arm64/
         cp -R ${{ env.TEMP_DIR }}/h2-pack mac_arm64/
+        echo "ls -l mac_arm64"
         ls -l mac_arm64
 
         ls -l .
