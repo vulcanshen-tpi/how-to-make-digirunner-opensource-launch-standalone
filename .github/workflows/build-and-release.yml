@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       digiRunner_version:
-        description: 'digiRunner-Open-Source Release Tag (e.g.,4.5.13.1-rc)'
+        description: 'digiRunner-Open-Source Release Tag (e.g.,v4.5.13.1-rc)'
         required: true
-        default: '4.5.13.1-rc'
+        default: 'v4.5.13.1-rc'
       task_compose_version:
-        description: 'task-compose Release Tag (e.g., 1.2.0)'
+        description: 'task-compose Release Tag (e.g.,v1.2.0)'
         required: true
-        default: '1.2.0'
+        default: 'v1.2.0'
       java_arch:
         description: 'Java JRE Architecture (e.g., x64, arm64)'
         required: true
@@ -53,10 +53,10 @@ jobs:
     - name: Download digiRunner-Open-Source h2-pack.zip
       uses: robinraju/release-downloader@v1
       with:
-        repo: TPIsoftwareOSPO/digiRunner-Open-Source
+        repository: TPIsoftwareOSPO/digiRunner-Open-Source
         tag: ${{ env.DIGIRUNNER_VERSION }}
         fileName: 'h2-pack.zip' # 假設檔案名稱為 a.zip
-        out-path: ./downloads # 下載到 ./downloads 目錄
+        out-file-path: ./downloads # 下載到 ./downloads 目錄
 
     - name: Set Release Asset Extension based on OS
       id: set_extension # 為這個步驟指定 ID，以便引用其輸出
@@ -72,10 +72,10 @@ jobs:
     - name: Download task-compose-portable.zip
       uses: robinraju/release-downloader@v1
       with:
-        repo: vulcanshen-tpi/task-compose
+        repository: vulcanshen-tpi/task-compose
         tag: ${{ env.TASK_COMPOSE_VERSION }}
         fileName: '${{ env.TASK_COMPOSE_ASSET_NAME }}'
-        out-path: ./downloads
+        out-file-path: ./downloads
 
     - name: Download Java 21 JRE from Azul Zulu
       run: |
