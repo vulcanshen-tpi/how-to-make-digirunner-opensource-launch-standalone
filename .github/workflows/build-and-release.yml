@@ -51,7 +51,7 @@ jobs:
         echo "TEMP_DIR=temp_extract" >> $GITHUB_ENV
 
     - name: Download digiRunner-Open-Source h2-pack.zip
-      uses: robinraju/release-asset-downloader@v1
+      uses: robinraju/release-asset-downloader@v1.12
       with:
         repo: TPIsoftwareOSPO/digiRunner-Open-Source
         tag: ${{ env.DIGIRUNNER_VERSION }}
@@ -70,7 +70,7 @@ jobs:
         fi
 
     - name: Download task-compose-portable.zip
-      uses: robinraju/release-asset-downloader@v1
+      uses: robinraju/release-asset-downloader@v1.12
       with:
         repo: vulcanshen-tpi/task-compose
         tag: ${{ env.TASK_COMPOSE_VERSION }}
