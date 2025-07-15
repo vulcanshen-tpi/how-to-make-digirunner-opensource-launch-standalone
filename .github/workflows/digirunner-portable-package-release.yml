@@ -94,18 +94,23 @@ jobs:
       run: |
         mkdir -p ${{ env.TEMP_DIR }}/win/task-compose/
         unzip ./downloads/win/task-compose/${{ env.TASK_COMPOSE_WIN_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content && rm ./downloads/win/task-compose/${{ env.TASK_COMPOSE_WIN_ASSET_NAME }}
+        ls -l ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content
 
     - name: Extract mac task-compose ${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
       run: |
         mkdir -p ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content
         tar -xzf ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }} -C ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content && rm ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
+        ls -l ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content
 
     - name: Extract Java JRE zip
       run: |
         # Java JRE 的 zip 包解壓縮後通常會是一個帶有版本號的目錄 (例如 zulu21.0.3-fx-jre-fx-linux_x64)
         # 我們需要找到這個目錄並將其內容移動出來
-        unzip ./downloads/win/java_jre.zip -d ${{ env.TEMP_DIR }}/win/jre && rm ./downloads/win/java_jre.zip
-        unzip ./downloads/mac/java_jre.zip -d ${{ env.TEMP_DIR }}/mac/jre && rm ./downloads/win/java_jre.zip
+        unzip -q ./downloads/win/java_jre.zip -d ${{ env.TEMP_DIR }}/win/jre && rm ./downloads/win/java_jre.zip
+        unzip -q ./downloads/mac/java_jre.zip -d ${{ env.TEMP_DIR }}/mac/jre && rm ./downloads/mac/java_jre.zip
+        ls -l ${{ env.TEMP_DIR }}/win/jre 
+        ls -l ${{ env.TEMP_DIR }}/mac/jre
+
 
     - name: Consolidate Files and Create Combined ZIP
       run: |
