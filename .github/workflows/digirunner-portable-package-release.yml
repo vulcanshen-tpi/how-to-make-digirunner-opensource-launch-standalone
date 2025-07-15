@@ -89,8 +89,8 @@ jobs:
 
     - name: Extract digiRunner-Open-Source a.zip
       run: |
-        unzip ./downloads/h2-pack.zip -d ${{ env.TEMP_DIR }}/dgr_content && rm ./downloads/h2-pack.zip
-        ls -l ${{ env.TEMP_DIR }}/dgr_content
+        unzip -q ./downloads/h2-pack.zip -d ${{ env.TEMP_DIR }} && rm ./downloads/h2-pack.zip
+        ls -l ${{ env.TEMP_DIR }}/h2-pack
 
     - name: Extract win task-compose ${{ env.TASK_COMPOSE_WIN_ASSET_NAME }}
       run: |
@@ -121,14 +121,14 @@ jobs:
         mkdir -p windows_amd64
         mv ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content/task-compose-portable.exe windows_amd64/
         mv ${{ env.TEMP_DIR }}/win/jre windows_amd64/
-        mv ${{ env.TEMP_DIR }}/dgr_content/* windows_amd64/
+        cp -R ${{ env.TEMP_DIR }}/h2-pack windows_amd64/
         ls -l windows_amd64
         zip -q -r windows_amd64.zip windows_amd64/
 
         mkdir -p mac_arm64
         mv ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content/task-compose-portable mac_arm64/
         mv ${{ env.TEMP_DIR }}/mac/jre windows_amd64/
-        mv ${{ env.TEMP_DIR }}/dgr_content/* mac_arm64/
+        cp -R ${{ env.TEMP_DIR }}/h2-pack mac_arm64/
         ls -l mac_arm64
 
         ls -l .
