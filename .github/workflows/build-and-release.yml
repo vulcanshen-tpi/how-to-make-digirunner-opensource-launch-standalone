@@ -14,10 +14,10 @@ on:
       java_arch:
         description: 'Java JRE Architecture (e.g., x64, arm64)'
         required: true
-        default: 'adm64'
+        default: 'amd64'
         type: choice 
         options:
-          - adm64
+          - amd64
           - arm64
       java_os:
         description: 'Java JRE OS (e.g., linux, mac)'
