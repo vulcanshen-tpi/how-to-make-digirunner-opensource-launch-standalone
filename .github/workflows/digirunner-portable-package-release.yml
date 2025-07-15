@@ -106,8 +106,10 @@ jobs:
       run: |
         # Java JRE 的 zip 包解壓縮後通常會是一個帶有版本號的目錄 (例如 zulu21.0.3-fx-jre-fx-linux_x64)
         # 我們需要找到這個目錄並將其內容移動出來
-        unzip -q ./downloads/win/java_jre.zip -d ${{ env.TEMP_DIR }}/win/jre && rm ./downloads/win/java_jre.zip
-        unzip -q ./downloads/mac/java_jre.zip -d ${{ env.TEMP_DIR }}/mac/jre && rm ./downloads/mac/java_jre.zip
+        unzip -q ./downloads/win/java_jre.zip -d ${{ env.TEMP_DIR }}/win && rm ./downloads/win/java_jre.zip
+        unzip -q ./downloads/mac/java_jre.zip -d ${{ env.TEMP_DIR }}/mac && rm ./downloads/mac/java_jre.zip
+        mv ${{ env.TEMP_DIR }}/win/zulu21.42.19-ca-jre21.0.7-win_x64 ${{ env.TEMP_DIR }}/win/jre
+        mv ${{ env.TEMP_DIR }}/mac/zulu21.42.19-ca-jre21.0.7-macosx_aarch64 ${{ env.TEMP_DIR }}/mac/jre
         ls -l ${{ env.TEMP_DIR }}/win/jre 
         ls -l ${{ env.TEMP_DIR }}/mac/jre
 
@@ -115,15 +117,18 @@ jobs:
     - name: Consolidate Files and Create Combined ZIP
       run: |
         mkdir -p windows_amd64
-        mv ${{ env.TEMP_DIR }}/win/* windows_amd64/
-        mv ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content/* windows_amd64/
+        mv ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content/task-compose-portable.exe windows_amd64/
+        mv ${{ env.TEMP_DIR }}/win/jre windows_amd64/
         mv ${{ env.TEMP_DIR }}/java_content/* windows_amd64/
         zip -r windows_amd64.zip windows_amd64/
 
         mkdir -p mac_arm64
-        mv ${{ env.TEMP_DIR }}/mac/* mac_arm64/
-        mv ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content/* mac_arm64/
+        mv ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content/task-compose-portable mac_arm64/
+        mv ${{ env.TEMP_DIR }}/mac/jre windows_amd64/
         mv ${{ env.TEMP_DIR }}/java_content/* mac_arm64/
+        ls -l windows_amd64
+        ls -l mac_arm64
+        ls -l .
         zip -r mac_arm64.zip mac_arm64/
         # 清理臨時目錄
         rm -rf ${{ env.TEMP_DIR }} mac_arm64/ windows_amd64/
