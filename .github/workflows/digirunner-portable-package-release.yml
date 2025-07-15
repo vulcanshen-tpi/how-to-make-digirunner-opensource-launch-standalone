@@ -119,13 +119,13 @@ jobs:
         mkdir -p windows_amd64
         mv ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content/task-compose-portable.exe windows_amd64/
         mv ${{ env.TEMP_DIR }}/win/jre windows_amd64/
-        mv ${{ env.TEMP_DIR }}/java_content/* windows_amd64/
+        mv ${{ env.TEMP_DIR }}/dgr_content/* windows_amd64/
         zip -r windows_amd64.zip windows_amd64/
 
         mkdir -p mac_arm64
         mv ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content/task-compose-portable mac_arm64/
         mv ${{ env.TEMP_DIR }}/mac/jre windows_amd64/
-        mv ${{ env.TEMP_DIR }}/java_content/* mac_arm64/
+        mv ${{ env.TEMP_DIR }}/dgr_content/* mac_arm64/
         ls -l windows_amd64
         ls -l mac_arm64
         ls -l .
