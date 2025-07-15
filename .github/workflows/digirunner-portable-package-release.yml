@@ -149,9 +149,8 @@ jobs:
           Combined package generated from:
           - digiRunner-Open-Source: ${{ env.DIGIRUNNER_VERSION }}
           - task-compose: ${{ env.TASK_COMPOSE_VERSION }}
-          - Java JRE 21 (${{ env.JAVA_OS }}/${{ env.JAVA_ARCH }})
         files: |
-          - windows_amd64.zip
-          - mac_arm64.zip
+            windows_amd64.zip
+            mac_arm64.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
