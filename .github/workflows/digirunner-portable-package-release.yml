@@ -11,22 +11,6 @@ on:
         description: 'task-compose Release Tag (e.g.,v1.2.0)'
         required: true
         default: 'v1.2.0'
-      java_arch:
-        description: 'Java JRE Architecture (e.g., x64, arm64)'
-        required: true
-        default: 'amd64'
-        type: choice 
-        options:
-          - amd64
-          - arm64
-      java_os:
-        description: 'Java JRE OS (e.g., linux, mac)'
-        required: true
-        type: choice 
-        options: 
-          - windows
-          - darwin
-        default: 'windows'
       release_tag:
         description: 'Target Release Tag for this project (e.g., v1.0.0)'
         required: true
@@ -45,8 +29,6 @@ jobs:
       run: |
         echo "DIGIRUNNER_VERSION=${{ github.event.inputs.digiRunner_version }}" >> $GITHUB_ENV
         echo "TASK_COMPOSE_VERSION=${{ github.event.inputs.task_compose_version }}" >> $GITHUB_ENV
-        echo "JAVA_ARCH=${{ github.event.inputs.java_arch }}" >> $GITHUB_ENV
-        echo "JAVA_OS=${{ github.event.inputs.java_os }}" >> $GITHUB_ENV
         echo "RELEASE_TAG=${{ github.event.inputs.release_tag }}" >> $GITHUB_ENV
         echo "TEMP_DIR=temp_extract" >> $GITHUB_ENV
 
@@ -64,29 +46,39 @@ jobs:
         ORIGINAL_TASK_COMPOSE_VERSION="${{ env.TASK_COMPOSE_VERSION }}"
         
         CLEANED_TASK_COMPOSE_VERSION="${ORIGINAL_TASK_COMPOSE_VERSION#v}"
-        OS_PART="${{ env.JAVA_OS }}"
-        ARCH_PART="${{ env.JAVA_ARCH }}"
 
-        if [ "${{ env.JAVA_OS }}" == "windows" ]; then
-          echo "ZULU_JRE_DOWNLOAD_URL=https://cdn.azul.com/zulu/bin/zulu21.42.19-ca-jre21.0.7-win_x64.zip" >> $GITHUB_ENV
-          echo "TASK_COMPOSE_ASSET_NAME=task-compose-portable_${CLEANED_TASK_COMPOSE_VERSION}_${OS_PART}_${ARCH_PART}.zip" >> $GITHUB_ENV
-        elif [ "${OS_PART}" == "darwin" ]; then
-          echo "ZULU_JRE_DOWNLOAD_URL=https://cdn.azul.com/zulu/bin/zulu21.42.19-ca-jre21.0.7-macosx_aarch64.zip" >> $GITHUB_ENV
-          echo "TASK_COMPOSE_ASSET_NAME=task-compose-portable_${CLEANED_TASK_COMPOSE_VERSION}_${OS_PART}_${ARCH_PART}.tar.gz" >> $GITHUB_ENV
-        fi
+        # windows components
+        echo "TASK_COMPOSE_WIN_ASSET_NAME=task-compose-portable_${CLEANED_TASK_COMPOSE_VERSION}_windows_amd64.zip" >> $GITHUB_ENV
+        
+        # mac components
+        echo "TASK_COMPOSE_MAC_ASSET_NAME=task-compose-portable_${CLEANED_TASK_COMPOSE_VERSION}_darwin_arm64.tar.gz" >> $GITHUB_ENV
 
-    - name: Download task-compose-portable.zip
+    - name: Download windows task-compose-portable.zip
       uses: robinraju/release-downloader@v1
       with:
         repository: vulcanshen-tpi/task-compose
         tag: ${{ env.TASK_COMPOSE_VERSION }}
-        fileName: '${{ env.TASK_COMPOSE_ASSET_NAME }}'
-        out-file-path: ./downloads
+        fileName: '${{ env.TASK_COMPOSE_WIN_ASSET_NAME }}'
+        out-file-path: ./downloads/win/task-compose
 
-    - name: Download Java 21 JRE from Azul Zulu
+    - name: Download mac task-compose-portable.zip
+      uses: robinraju/release-downloader@v1
+      with:
+        repository: vulcanshen-tpi/task-compose
+        tag: ${{ env.TASK_COMPOSE_VERSION }}
+        fileName: '${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}'
+        out-file-path: ./downloads/mac/task-compose
+
+    - name: Download Win Java 21 JRE from Azul Zulu
       run: |
-        echo "Downloading Java JRE from: ${{ env.ZULU_JRE_DOWNLOAD_URL }}"
-        curl -L -o ./downloads/java_jre.zip "${{ env.ZULU_JRE_DOWNLOAD_URL }}"
+        echo "Downloading Win Java JRE from: https://cdn.azul.com/zulu/bin/zulu21.42.19-ca-jre21.0.7-win_x64.zip"
+        curl -L -o ./downloads/win/java_jre.zip https://cdn.azul.com/zulu/bin/zulu21.42.19-ca-jre21.0.7-win_x64.zip
+        if [ $? -ne 0 ]; then
+          echo "Error: Java JRE download failed from $JAVA_URL"
+          exit 1
+        fi
+        echo "Downloading Mac Java JRE from: https://cdn.azul.com/zulu/bin/zulu21.42.19-ca-jre21.0.7-macosx_aarch64.zip"
+        curl -L -o ./downloads/mac/java_jre.zip https://cdn.azul.com/zulu/bin/zulu21.42.19-ca-jre21.0.7-macosx_aarch64.zip
         if [ $? -ne 0 ]; then
           echo "Error: Java JRE download failed from $JAVA_URL"
           exit 1
@@ -98,49 +90,47 @@ jobs:
     - name: Extract digiRunner-Open-Source a.zip
       run: unzip ./downloads/h2-pack.zip -d ${{ env.TEMP_DIR }}/dgr_content && rm ./downloads/h2-pack.zip
 
-    - name: Extract task-compose ${{ env.TASK_COMPOSE_ASSET_NAME }}
-      run: unzip ./downloads/${{ env.TASK_COMPOSE_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/task_compose_content && rm ./downloads/${{ env.TASK_COMPOSE_ASSET_NAME }}
+    - name: Extract win task-compose ${{ env.TASK_COMPOSE_WIN_ASSET_NAME }}
+      run: unzip ./downloads/win/task-compose/${{ env.TASK_COMPOSE_WIN_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content && rm ./downloads/task-compose/win/${{ env.TASK_COMPOSE_WIN_ASSET_NAME }}
+
+    - name: Extract mac task-compose ${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
+      run: unzip ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content && rm ./downloads/task-compose/mac/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
 
     - name: Extract Java JRE zip
       run: |
         # Java JRE 的 zip 包解壓縮後通常會是一個帶有版本號的目錄 (例如 zulu21.0.3-fx-jre-fx-linux_x64)
         # 我們需要找到這個目錄並將其內容移動出來
-        unzip ./downloads/java_jre.zip -d ${{ env.TEMP_DIR }}/java_content && rm ./downloads/java_jre.zip
-        # 找到解壓縮後的第一層目錄，然後將其內容移動到 TEMP_DIR/java_content/jre_root
-        JAVA_ROOT_DIR=$(find "${{ env.TEMP_DIR }}/java_content" -mindepth 1 -maxdepth 1 -type d -print -quit)
-        if [ -d "$JAVA_ROOT_DIR" ]; then
-          mv "$JAVA_ROOT_DIR"/* "${{ env.TEMP_DIR }}/java_content/"
-          rmdir "$JAVA_ROOT_DIR" # 移除空目錄
-        else
-          echo "Warning: Java JRE root directory not found as expected. Check zip structure."
-        fi
-        # 如果 zulu zip 直接解壓就是 jre/ 目錄，那麼請調整上方的 unzip -d 參數
-        # 並確保最終 jre 的內容在 ${{ env.TEMP_DIR }}/java_content/jre/ 內
+        unzip ./downloads/win/java_jre.zip -d ${{ env.TEMP_DIR }}/win/jre && rm ./downloads/win/java_jre.zip
+        unzip ./downloads/mac/java_jre.zip -d ${{ env.TEMP_DIR }}/mac/jre && rm ./downloads/win/java_jre.zip
 
     - name: Consolidate Files and Create Combined ZIP
       run: |
-        # 將所有解壓縮的內容移動到一個最終的合併目錄
-        mkdir -p combined_root
-        mv ${{ env.TEMP_DIR }}/dgr_content/* combined_root/
-        mv ${{ env.TEMP_DIR }}/task_compose_content/* combined_root/
-        mv ${{ env.TEMP_DIR }}/java_content/* combined_root/ # 假設 java JRE 的核心內容就在 java_content 下
+        mkdir -p windows_amd64
+        mv ${{ env.TEMP_DIR }}/win/* windows_amd64/
+        mv ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content/* windows_amd64/
+        mv ${{ env.TEMP_DIR }}/java_content/* windows_amd64/
+        zip -r windows_amd64.zip windows_amd64/
 
-        # 重新打包成一個新的 zip 檔案
-        zip -r ${{ env.JAVA_OS }}_${{ env.JAVA_ARCH }}.zip combined_root/
-        
+        mkdir -p mac_arm64
+        mv ${{ env.TEMP_DIR }}/mac/* mac_arm64/
+        mv ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content/* mac_arm64/
+        mv ${{ env.TEMP_DIR }}/java_content/* mac_arm64/
+        zip -r mac_arm64.zip mac_arm64/
         # 清理臨時目錄
-        rm -rf ${{ env.TEMP_DIR }} combined_root
+        rm -rf ${{ env.TEMP_DIR }} mac_arm64/ windows_amd64/
 
     - name: Create GitHub Release and Upload Asset
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ env.RELEASE_TAG }}
-        name: Combined Release ${{ env.RELEASE_TAG }}
+        name: digirunner portable package ${{ env.RELEASE_TAG }}
         body: |
           Combined package generated from:
           - digiRunner-Open-Source: ${{ env.DIGIRUNNER_VERSION }}
           - task-compose: ${{ env.TASK_COMPOSE_VERSION }}
           - Java JRE 21 (${{ env.JAVA_OS }}/${{ env.JAVA_ARCH }})
-        files: ${{ env.JAVA_OS }}_${{ env.JAVA_ARCH }}.zip
+        files: |
+          - windows_amd64.zip
+          - mac_arm64.zip
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 使用內建的 GITHUB_TOKEN
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
