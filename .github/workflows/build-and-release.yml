@@ -8,9 +8,9 @@ on:
         required: true
         default: 'v4.5.13.1-rc'
       task_compose_version:
-        description: 'task-compose Release Tag (e.g., v1.2.0)'
+        description: 'task-compose Release Tag (e.g., 1.2.0)'
         required: true
-        default: 'v1.2.0'
+        default: '1.2.0'
       java_arch:
         description: 'Java JRE Architecture (e.g., x64, arm64)'
         required: true
