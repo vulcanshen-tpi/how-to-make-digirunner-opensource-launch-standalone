@@ -88,7 +88,9 @@ jobs:
       run: mkdir -p ${{ env.TEMP_DIR }}
 
     - name: Extract digiRunner-Open-Source a.zip
-      run: unzip ./downloads/h2-pack.zip -d ${{ env.TEMP_DIR }}/dgr_content && rm ./downloads/h2-pack.zip
+      run: |
+        unzip ./downloads/h2-pack.zip -d ${{ env.TEMP_DIR }}/dgr_content && rm ./downloads/h2-pack.zip
+        ls -l ${{ env.TEMP_DIR }}/dgr_content
 
     - name: Extract win task-compose ${{ env.TASK_COMPOSE_WIN_ASSET_NAME }}
       run: |
@@ -120,16 +122,17 @@ jobs:
         mv ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content/task-compose-portable.exe windows_amd64/
         mv ${{ env.TEMP_DIR }}/win/jre windows_amd64/
         mv ${{ env.TEMP_DIR }}/dgr_content/* windows_amd64/
-        zip -r windows_amd64.zip windows_amd64/
+        ls -l windows_amd64
+        zip -q -r windows_amd64.zip windows_amd64/
 
         mkdir -p mac_arm64
         mv ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content/task-compose-portable mac_arm64/
         mv ${{ env.TEMP_DIR }}/mac/jre windows_amd64/
         mv ${{ env.TEMP_DIR }}/dgr_content/* mac_arm64/
-        ls -l windows_amd64
         ls -l mac_arm64
+
         ls -l .
-        zip -r mac_arm64.zip mac_arm64/
+        zip -q -r mac_arm64.zip mac_arm64/
         # 清理臨時目錄
         rm -rf ${{ env.TEMP_DIR }} mac_arm64/ windows_amd64/
 
