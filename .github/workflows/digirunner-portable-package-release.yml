@@ -97,7 +97,7 @@ jobs:
 
     - name: Extract mac task-compose ${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
       run: |
-        mkdir -p ${{ env.TEMP_DIR }}/mac/task-compose/
+        mkdir -p ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content
         tar -xzf ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }} -C ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content && rm ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
 
     - name: Extract Java JRE zip
