@@ -6,11 +6,11 @@ on:
       digiRunner_version:
         description: 'digiRunner-Open-Source Release Tag (e.g.,v4.5.13.1-rc)'
         required: true
-        default: 'latest'
+        default: 'v4.5.13.1-rc'
       task_compose_version:
         description: 'task-compose Release Tag (e.g., v1.2.0)'
         required: true
-        default: 'latest'
+        default: 'v1.2.0'
       java_arch:
         description: 'Java JRE Architecture (e.g., x64, arm64)'
         required: true
