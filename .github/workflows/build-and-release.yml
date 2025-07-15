@@ -61,12 +61,16 @@ jobs:
     - name: Set Release Asset Extension based on OS
       id: set_extension # 為這個步驟指定 ID，以便引用其輸出
       run: |
+        ORIGINAL_TASK_COMPOSE_VERSION="${{ env.TASK_COMPOSE_VERSION }}"
+        
+        CLEANED_TASK_COMPOSE_VERSION="${ORIGINAL_TASK_COMPOSE_VERSION#v}"
+
         if [ "${{ env.JAVA_OS }}" == "windows" ]; then
           echo "ZULU_JRE_DOWNLOAD_URL=https://cdn.azul.com/zulu/bin/zulu21.42.19-ca-jre21.0.7-win_x64.zip" >> $GITHUB_ENV
-          echo "TASK_COMPOSE_ASSET_NAME=task-compose-portable_${{ env.JAVA_OS }}_${{ env.JAVA_ARCH }}.zip" >> $GITHUB_ENV
+          echo "TASK_COMPOSE_ASSET_NAME=task-compose-portable_${CLEANED_TASK_COMPOSE_VERSION}_{{ env.JAVA_OS }}_${{ env.JAVA_ARCH }}.zip" >> $GITHUB_ENV
         elif [ "${{ env.JAVA_OS }}" == "darwin" ]; then
           echo "ZULU_JRE_DOWNLOAD_URL=https://cdn.azul.com/zulu/bin/zulu21.42.19-ca-jre21.0.7-macosx_aarch64.zip" >> $GITHUB_ENV
-          echo "TASK_COMPOSE_ASSET_NAME=task-compose-portable_${{ env.JAVA_OS }}_${{ env.JAVA_ARCH }}.tar.gz" >> $GITHUB_ENV
+          echo "TASK_COMPOSE_ASSET_NAME=task-compose-portable_${CLEANED_TASK_COMPOSE_VERSION}_${{ env.JAVA_OS }}_${{ env.JAVA_ARCH }}.tar.gz" >> $GITHUB_ENV
         fi
 
     - name: Download task-compose-portable.zip
