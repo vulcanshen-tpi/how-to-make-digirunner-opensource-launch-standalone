@@ -91,10 +91,14 @@ jobs:
       run: unzip ./downloads/h2-pack.zip -d ${{ env.TEMP_DIR }}/dgr_content && rm ./downloads/h2-pack.zip
 
     - name: Extract win task-compose ${{ env.TASK_COMPOSE_WIN_ASSET_NAME }}
-      run: unzip ./downloads/win/task-compose/${{ env.TASK_COMPOSE_WIN_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content && rm ./downloads/task-compose/win/${{ env.TASK_COMPOSE_WIN_ASSET_NAME }}
+      run: |
+        mkdir -p ${{ env.TEMP_DIR }}/win/task-compose/
+        unzip ./downloads/win/task-compose/${{ env.TASK_COMPOSE_WIN_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content && rm ./downloads/task-compose/win/${{ env.TASK_COMPOSE_WIN_ASSET_NAME }}
 
     - name: Extract mac task-compose ${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
-      run: unzip ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content && rm ./downloads/task-compose/mac/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
+      run: |
+        mkdir -p ${{ env.TEMP_DIR }}/mac/task-compose/
+        unzip ./downloads/mac/task-compose/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content && rm ./downloads/task-compose/mac/${{ env.TASK_COMPOSE_MAC_ASSET_NAME }}
 
     - name: Extract Java JRE zip
       run: |
