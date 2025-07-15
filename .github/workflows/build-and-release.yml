@@ -51,7 +51,7 @@ jobs:
         echo "TEMP_DIR=temp_extract" >> $GITHUB_ENV
 
     - name: Download digiRunner-Open-Source h2-pack.zip
-      uses: robinraju/release-asset-downloader@v1.12
+      uses: robinraju/release-downloader@v1
       with:
         repo: TPIsoftwareOSPO/digiRunner-Open-Source
         tag: ${{ env.DIGIRUNNER_VERSION }}
@@ -64,13 +64,13 @@ jobs:
         if [ "${{ env.JAVA_OS }}" == "windows" ]; then
           echo "ZULU_JRE_DOWNLOAD_URL=https://cdn.azul.com/zulu/bin/zulu21.42.19-ca-jre21.0.7-win_x64.zip" >> $GITHUB_ENV
           echo "TASK_COMPOSE_ASSET_NAME=task-compose-portable_${{ env.JAVA_OS }}_${{ env.JAVA_ARCH }}.zip" >> $GITHUB_ENV
-        else if [ "${{ env.JAVA_OS }}" == "darwin" ]; then
+        elif [ "${{ env.JAVA_OS }}" == "darwin" ]; then
           echo "ZULU_JRE_DOWNLOAD_URL=https://cdn.azul.com/zulu/bin/zulu21.42.19-ca-jre21.0.7-macosx_aarch64.zip" >> $GITHUB_ENV
           echo "TASK_COMPOSE_ASSET_NAME=task-compose-portable_${{ env.JAVA_OS }}_${{ env.JAVA_ARCH }}.tar.gz" >> $GITHUB_ENV
         fi
 
     - name: Download task-compose-portable.zip
-      uses: robinraju/release-asset-downloader@v1.12
+      uses: robinraju/release-downloader@v1
       with:
         repo: vulcanshen-tpi/task-compose
         tag: ${{ env.TASK_COMPOSE_VERSION }}
@@ -92,8 +92,8 @@ jobs:
     - name: Extract digiRunner-Open-Source a.zip
       run: unzip ./downloads/h2-pack.zip -d ${{ env.TEMP_DIR }}/dgr_content && rm ./downloads/h2-pack.zip
 
-    - name: Extract task-compose b.zip
-      run: unzip ./downloads/${{ env.TASK_COMPOSE_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/task_compose_content && rm ./downloads/b.zip
+    - name: Extract task-compose ${{ env.TASK_COMPOSE_ASSET_NAME }}
+      run: unzip ./downloads/${{ env.TASK_COMPOSE_ASSET_NAME }} -d ${{ env.TEMP_DIR }}/task_compose_content && rm ./downloads/${{ env.TASK_COMPOSE_ASSET_NAME }}
 
     - name: Extract Java JRE zip
       run: |
