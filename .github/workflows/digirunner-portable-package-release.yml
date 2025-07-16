@@ -123,22 +123,24 @@ jobs:
         mkdir -p windows_amd64
         mv ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content/task-compose-portable.exe windows_amd64/
         mv ${{ env.TEMP_DIR }}/win/jre windows_amd64/
-        cp -R ${{ env.TEMP_DIR }}/h2-pack windows_amd64/
+        cp -R ${{ env.TEMP_DIR }}/h2-pack windows_amd64/digirunner-${{ env.DIGIRUNNER_VERSION }}
         echo "ls -l windows_amd64"
         ls -l windows_amd64
-        zip -q -r windows_amd64.zip windows_amd64/
+        mv windows_amd64 windows_amd64_${{ env.RELEASE_TAG }}
+        zip -q -r windows_amd64_${{ env.RELEASE_TAG }}.zip windows_amd64_${{ env.RELEASE_TAG }}/
 
         mkdir -p mac_arm64
         mv ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content/task-compose-portable mac_arm64/
         mv ${{ env.TEMP_DIR }}/mac/jre mac_arm64/
-        cp -R ${{ env.TEMP_DIR }}/h2-pack mac_arm64/
+        cp -R ${{ env.TEMP_DIR }}/h2-pack mac_arm64/digirunner-${{ env.DIGIRUNNER_VERSION }}
         echo "ls -l mac_arm64"
         ls -l mac_arm64
+        mv mac_arm64 mac_arm64_${{ env.RELEASE_TAG }}
+        zip -q -r mac_arm64_${{ env.RELEASE_TAG }}.zip mac_arm64_${{ env.RELEASE_TAG }}/
 
         ls -l .
-        zip -q -r mac_arm64.zip mac_arm64/
-        # 清理臨時目錄
-        rm -rf ${{ env.TEMP_DIR }} mac_arm64/ windows_amd64/
+
+        rm -rf ${{ env.TEMP_DIR }} mac_arm64_${{ env.RELEASE_TAG }}/ windows_amd64_${{ env.RELEASE_TAG }}/
 
     - name: Create GitHub Release and Upload Asset
       uses: softprops/action-gh-release@v2
@@ -150,7 +152,7 @@ jobs:
           - digiRunner-Open-Source: ${{ env.DIGIRUNNER_VERSION }}
           - task-compose: ${{ env.TASK_COMPOSE_VERSION }}
         files: |
-            windows_amd64.zip
-            mac_arm64.zip
+            windows_amd64_${{ env.RELEASE_TAG }}.zip
+            mac_arm64_${{ env.RELEASE_TAG }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
