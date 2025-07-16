@@ -43,6 +43,6 @@ tasks:
       - db-detect
     args:
       - -cp
-      - ./digirunner-v4.5.13.1-rc/digirunner.jar
+      - ./digirunner/digirunner.jar
       - "@digirunner.args"
       - org.springframework.boot.loader.launch.PropertiesLauncher
