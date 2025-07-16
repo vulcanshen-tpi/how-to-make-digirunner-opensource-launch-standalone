@@ -124,6 +124,7 @@ jobs:
         mv ${{ env.TEMP_DIR }}/win/task-compose/task_compose_content/task-compose-portable.exe windows_amd64/
         mv ${{ env.TEMP_DIR }}/win/jre windows_amd64/
         cp -R ${{ env.TEMP_DIR }}/h2-pack windows_amd64/digirunner-${{ env.DIGIRUNNER_VERSION }}
+        cp task-compose-examples/task-compose-windows.yaml windows_amd64/task-compose.yaml
         echo "ls -l windows_amd64"
         ls -l windows_amd64
         mv windows_amd64 windows_amd64_${{ env.RELEASE_TAG }}
@@ -133,6 +134,7 @@ jobs:
         mv ${{ env.TEMP_DIR }}/mac/task-compose/task_compose_content/task-compose-portable mac_arm64/
         mv ${{ env.TEMP_DIR }}/mac/jre mac_arm64/
         cp -R ${{ env.TEMP_DIR }}/h2-pack mac_arm64/digirunner-${{ env.DIGIRUNNER_VERSION }}
+        cp task-compose-examples/task-compose-mac.yaml mac_arm64/task-compose.yaml
         echo "ls -l mac_arm64"
         ls -l mac_arm64
         mv mac_arm64 mac_arm64_${{ env.RELEASE_TAG }}
